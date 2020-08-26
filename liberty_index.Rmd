@@ -1,6 +1,3 @@
-
-
-
 ```{r}
 library(tidyr)
 library(stringr)
@@ -17,10 +14,7 @@ library(ggraph)
 
 ```
 
-
-
 #### Below codes are to calulate personal freedom and choice and personal safety####
-
 
 ##### FOR VULNERABLE EMPLOYBILITY #######
 
@@ -30,12 +24,8 @@ vulnerability_employments_index <- select(vulnerability_employments, c(2, 55:62)
 
 ```{r}
 colnames(vulnerability_employments_index)[1:9]<- c("code","2010","2011","2012","2013","2014","2015","2016","2017")
-
 vulnerability_employments_index<- gather(vulnerability_employments_index,"year","vulnerability_employment",2:9)
-
-
 ```
-
 
 
 ```{r}
@@ -47,21 +37,16 @@ index_vulnerability<- function (actual_value){
 
 ```{r}
 vulnerability_employments_index$vulnerability_employment<-index_vulnerability(vulnerability_employments_index$vulnerability_employment)
-
 vulnerability_employments_index$year <- as.integer(vulnerability_employments_index$year)
-
 ```
 
 
 
 ####-----Freedom from forced labor---###
 
-
-
 ```{r}
 freedom_forced_labor<- select(freedom_from_forced_labor, 2:4)
 freedom_forced_labor<- filter(freedom_forced_labor, year %in% c(2010,2011,2012,2013,2014,2015,2016,2017))
-
 ```
 
 ```{r}
@@ -98,16 +83,11 @@ index_discussion<- function (actual_value){
   return(ind)
 }
 ```
-
 ```{r}
 freedom_discussion$freedom_discussion<-index_discussion(freedom_discussion$freedom_discussion)
 ```
 
-
-
 ####-----Freedom of domestic movement-----####
-
-
 
 ```{r}
 freedom_domestic_movement<- select(freedom_of_domestic_movement, 2:4)
@@ -121,7 +101,6 @@ index_movement<- function (actual_value){
   return(ind)
 }
 ```
-
 ```{r}
 freedom_domestic_movement$freedom_domestic_movement<-index_movement(freedom_domestic_movement$freedom_domestic_movement)
 ```
@@ -147,12 +126,7 @@ index_satisfaction<- function (actual_value){
 life_satisfaction$life_satisfaction <- index_satisfaction(life_satisfaction$life_satisfaction)
 ```
 
-
-
-
 ####------Economic Freedom Score-----###
-
-
 
 ```{r}
 economic_freedom <- select(economic_freedom_score, c(2,1,4))
@@ -172,12 +146,7 @@ economic_freedom$economic_freedom<- index_economic(economic_freedom$economic_fre
 ```
 
 
-
-
 ####-----Press Freedom----#####
-
-
-
 
 
 ```{r}
@@ -192,7 +161,6 @@ colnames(world_press_freedom_index)[2:9]<- c("2010","2011","2012","2013","2014",
 ```
 
 ```{r}
-
 world_press_freedom_index$`2010`<- as.numeric(world_press_freedom_index$`2010`)
 world_press_freedom_index$`2011`<- as.numeric(world_press_freedom_index$`2011`)
 world_press_freedom_index$`2012`<- as.numeric(world_press_freedom_index$`2012`)
@@ -208,7 +176,6 @@ index_press<- function (actual_value){
   ind<- (actual_value - 100)/(0-100)
   return(ind)
 }
-
 ```
 
 ```{r}
@@ -216,8 +183,6 @@ world_press_freedom_index[2:9]<-index_press(world_press_freedom_index[2:9])
 world_press_freedom_index <- gather(world_press_freedom_index,"year","press_freedom",2:9)
 world_press_freedom_index$year<- as.integer(world_press_freedom_index$year)
 ```
-
-
 
 ##### Joining all the above tables created for the personal freedom and choice index ###
 
@@ -240,29 +205,18 @@ personal_freedom <- left_join(personal_freedom, economic_freedom, by=c("code","y
 
 ```{r}
 
-
 personal_freedom<-mutate(personal_freedom,personal_freedom_index= rowMeans(personal_freedom[,3:9],na.rm=T))
 personal_freedom[,3:10]<-signif(personal_freedom[,3:10],digits=3)
 
-
-
 ```
-
-
-
 
 ### Personal safety index starts here ####
 
 
-
-
 ####----homocide------#####
-
-
 
 ```{r}
 homicide <- select(homicide_country_data,c(1,6:13))
-
 ```
 
 ```{r}
@@ -283,15 +237,10 @@ index_homicide<- function (actual_value){
 homicide[2:9]<-index_homicide(homicide[2:9])
 homicide<- gather(homicide,"year","homicide", 2:9)
 homicide$year<- as.integer(homicide$year)
-
-
-
 ```
 
 
-
 ###----political killings-----###
-
 
 
 ```{r}
@@ -301,8 +250,6 @@ colnames(political_killings)[1] <- "code"
 
 ```
 
-
-
 ```{r}
 index_political<- function (actual_value){
   ind<- (actual_value - 0)/(1-0)
@@ -310,18 +257,13 @@ index_political<- function (actual_value){
 }
 ```
 
-
 ```{r}
 political_killings$political_killings<-index_political(political_killings$political_killings)
 political_killings$year <- as.integer(political_killings$year) 
-
 ```
 
 
-
 ###------deaths due to conflict and terrorism-----###
-
-
 
 
 ```{r}
@@ -332,7 +274,6 @@ conflict_terrorism_index<- select(deaths_conflict_terrorism_per_100000, c(2:4))
 colnames(conflict_terrorism_index)[1:3] <- c("code","year","conflict_terrorism_death")
 conflict_terrorism_index<- filter(conflict_terrorism_index,year %in% c(2010,2011,2012,2013,2014,2015,2016,2017))
 ```
-
 
 ```{r}
 index_conflict_terrorism<- function (actual_value){
@@ -346,10 +287,7 @@ conflict_terrorism_index$conflict_terrorism_death<-index_conflict_terrorism(conf
 ```
 
 
-
-
 #####----human rights protection index------#####
-
 
 
 ```{r}
@@ -359,8 +297,6 @@ colnames(human_rights_protection_index)[1:3] <- c("code","year","human_rights_pr
 
 ```{r}
 human_rights_protection_index<- filter(human_rights_protection_index, year %in% c(2010,2011,2012,2013,2014,2015,2016,2017))
-
-
 ```
 
 ```{r}
@@ -374,11 +310,7 @@ index_human_rights<- function (actual_value){
 human_rights_protection_index$human_rights_protection<-index_human_rights(human_rights_protection_index$human_rights_protection)
 ```
 
-
-
 ####----rule of law----####
-
-
 
 ```{r}
 rule_of_law_index <- select(rule_of_law,c(4,6:13))
@@ -396,9 +328,6 @@ index_rule_law<- function (actual_value){
 ```
 
 ```{r}
-
-
-
 rule_of_law_index$`2010`<- as.numeric(rule_of_law_index$`2010`)
 rule_of_law_index$`2011`<- as.numeric(rule_of_law_index$`2011`)
 rule_of_law_index$`2012`<- as.numeric(rule_of_law_index$`2012`)
@@ -407,8 +336,6 @@ rule_of_law_index$`2014`<- as.numeric(rule_of_law_index$`2014`)
 rule_of_law_index$`2015`<- as.numeric(rule_of_law_index$`2015`)
 rule_of_law_index$`2016`<- as.numeric(rule_of_law_index$`2016`)
 rule_of_law_index$`2017`<- as.numeric(rule_of_law_index$`2017`)
-
-
 ```
 
 ```{r}
@@ -416,7 +343,6 @@ rule_of_law_index[2:9]<-index_rule_law(rule_of_law_index[2:9])
 
 rule_of_law_index <- gather(rule_of_law_index,"year","rule_of_law", "2010":"2017")
 rule_of_law_index$year <- as.integer(rule_of_law_index$year)
-
 ```
 
 
@@ -430,38 +356,23 @@ personal_safety <- left_join(homicide,conflict_terrorism_index, by=c("code","yea
 personal_safety <- left_join(personal_safety,rule_of_law_index,by=c("code","year"))
 personal_safety <- left_join(personal_safety,human_rights_protection_index,by=c("code","year"))
 personal_safety <- left_join(personal_safety,political_killings,by=c("code","year"))
-
 ```
 
 ```{r}
-
 personal_safety<-mutate(personal_safety,personal_safety_index= rowMeans(personal_safety[,3:7],na.rm=T))
-
 personal_safety[,3:8]<-signif(personal_safety[,3:8],digits=3)
-
-
 ```
-
-
 
 
 ##### Combining personal_safety_index and personal freedom index table ####
 
 
 
-
 ```{r}
-
 s_index <- left_join(personal_freedom,personal_safety, by = c("code","year"))
-
 s_index <- select(s_index, c(1:9,c(11:16,10)))
-
 s_index<- left_join(country_code, s_index, by="code") 
-
 skim(s_index)
-
-
-
 ```
 
 
@@ -476,7 +387,6 @@ DIS<-File.for.Discrimination.against.minorities.
 VDEM<-File.for.V.Dem
 CE<- File.for.clean.environment.
 IA<- File.for.Internet.access
-
 ```
 
 ```{r}
@@ -585,19 +495,11 @@ Indexed_Table[is.na(Indexed_Table)]<-0
 Indexed_Table$personal_rights_index<- (Indexed_Table$`political rights`+ Indexed_Table$freedom_of_expression + Indexed_Table$freedom_of_religion + Indexed_Table$access_to_justice + Indexed_Table$property_rights_for_women + Indexed_Table$access_to_internet + Indexed_Table$clean_environment)/7
 Indexed_Table$inclusiveness_index<- (Indexed_Table$discrimination_against_minorities + Indexed_Table$political_power_by_gender + Indexed_Table$political_power_by_socioeconomic_class + Indexed_Table$political_power_by_social_group)/4
 
-
-
 k_code <- Indexed_Table
-
-
-
-
 ```
 
 
-
-
-####----Creating a final table for vizulization----####
+####----Creating a final table for visualization----####
 
 
 
@@ -608,9 +510,6 @@ colnames(final_table)[1] <- "country"
 
 final_table <- select(final_table,c(1:15,c(18:31,16:17)))
 final_table <- mutate(final_table,liberty_index= rowMeans(final_table[,28:31],na.rm=T))
-
-
-
 ```
 
 
@@ -621,15 +520,9 @@ final_table <- mutate(final_table,liberty_index= rowMeans(final_table[,28:31],na
 ```{r}
 gdp_life_exp_1 <- gdp_life_exp[-c(1:2)]
 
-
 final_table<- left_join(final_table,gdp_life_exp_1,by=c("code","year")) 
 final_table$life_exp_at_birth <- as.numeric(final_table$life_exp_at_birth)
 final_table <- filter(final_table, region != 0 | !is.na(income_group))
-
-
-
-
-
 ```
 
 
@@ -643,8 +536,6 @@ colnames(happiness_index)[c(1,3)]<- c("Country","happiness_score")
 #happiness_plot <- filter(happiness_plot, region !=0 | income_group != "NA")
 happiness_index$happiness_index<- (happiness_index$happiness_score-2.66)/5.35
 happiness_index <- happiness_index[-3]
-
-
 ```
 
 ```{r}
@@ -662,104 +553,52 @@ final_table <- left_join(final_table,happiness_index,by=c("code","region","year"
 write.csv(final_table,"final_table_project.csv", row.names = F)
 ```
 
-
-
-
 ##### Final Code for Vizualization with final table #####
-
-
-
 
 ```{r}
 
 final_table_project$vulnerability_employment <- str_replace_all(final_table_project$vulnerability_employment,"NA","0")
-
 final_table_project$press_freedom <- str_replace_all(final_table_project$press_freedom,"NA","0")
-
 final_table_project$freedom_forced_labor <- str_replace_all(final_table_project$freedom_forced_labor,"NA","0")
-
 final_table_project$freedom_discussion <- str_replace_all(final_table_project$freedom_discussion,"NA","0")
-
 final_table_project$freedom_domestic_movement <- str_replace_all(final_table_project$freedom_domestic_movement,"NA","0")
-
 final_table_project$life_satisfaction <- str_replace_all(final_table_project$life_satisfaction,"NA","0")
-
 final_table_project$economic_freedom <- str_replace_all(final_table_project$economic_freedom,"NA","0")
-
 final_table_project$personal_freedom_index <- str_replace_all(final_table_project$personal_freedom_index,"NA","0")
-
 final_table_project$homicide <- str_replace_all(final_table_project$homicide,"NA","0")
-
 final_table_project$conflict_terrorism_death <- str_replace_all(final_table_project$conflict_terrorism_death,"NA","0")
-
 final_table_project$rule_of_law <- str_replace_all(final_table_project$rule_of_law,"NA","0")
-
 final_table_project$human_rights_protection <- str_replace_all(final_table_project$human_rights_protection,"NA","0")
-
 final_table_project$political_killings <- str_replace_all(final_table_project$political_killings,"NA","0")
-
-
 final_table_project$personal_safety_index <- str_replace_all(final_table_project$personal_safety_index,"NA","0")
-
 final_table_project$happiness_index <- str_replace_all(final_table_project$happiness_index,"NA","0")
-
 final_table_project$GDP <- str_replace_all(final_table_project$GDP,"NA","0")
-
 final_table_project$life_exp_at_birth <- str_replace_all(final_table_project$life_exp_at_birth,"NA","0")
-
-
 final_table_project$vulnerability_employment <- as.numeric(final_table_project$vulnerability_employment)
-
 final_table_project$press_freedom <- as.numeric(final_table_project$press_freedom)
-
 final_table_project$freedom_forced_labor <- as.numeric(final_table_project$freedom_forced_labor)
-
 final_table_project$freedom_discussion <- as.numeric(final_table_project$freedom_discussion)
-
 final_table_project$freedom_domestic_movement <- as.numeric(final_table_project$freedom_domestic_movement)
-
 final_table_project$life_satisfaction <- as.numeric(final_table_project$life_satisfaction)
-
 final_table_project$economic_freedom <- as.numeric(final_table_project$economic_freedom)
-
 final_table_project$personal_freedom_index <- as.numeric(final_table_project$personal_freedom_index)
-
 final_table_project$homicide <- as.numeric(final_table_project$homicide)
-
 final_table_project$conflict_terrorism_death <- as.numeric(final_table_project$conflict_terrorism_death)
-
 final_table_project$rule_of_law <- as.numeric(final_table_project$rule_of_law)
-
 final_table_project$human_rights_protection <- as.numeric(final_table_project$human_rights_protection)
-
 final_table_project$political_killings <- as.numeric(final_table_project$political_killings)
-
 final_table_project$personal_safety_index <- as.numeric(final_table_project$personal_safety_index)
-
 final_table_project$happiness_index <- as.numeric(final_table_project$happiness_index)
-
 final_table_project$GDP <- as.numeric(final_table_project$GDP)
-
 final_table_project$life_exp_at_birth <- as.numeric(final_table_project$life_exp_at_birth)
-
-
 ```
 
-
-
-
 ```{r}
-
 final_table_project <- filter(final_table_project, region != 0 | !is.na(income_group))
-
-
 ```
 
 
 ####--- creating viz-----####
-
-
-
 
 
 ```{r}
@@ -769,91 +608,55 @@ viz_table[,4:8]<- signif(viz_table[,4:8], digits=3)
 
 ```{r}
 viz_line <- select(viz_table,c(2:3,8))
-
-
 viz_line <- summarise(group_by(viz_line,region,year), liberty_index = median(liberty_index))
-
 world_rows <- summarise(group_by(viz_line,year),liberty_index= median(liberty_index))
-
 world_rows$region <- "World"
 world_rows<- select(world_rows, c(3,1:2))
-
 viz_line<-bind_rows(viz_line,world_rows)
-
 viz_line <- filter(viz_line, region != 0)
-
 viz_line$liberty_index <- signif(viz_line$liberty_index, digits=2)
 
 
 ggplot(viz_line, aes(x=year,y=liberty_index,col=region)) + geom_line(size=2)+ geom_point(size=2,color="black")+ scale_x_continuous(breaks = c(2010,2011,2012,2013,2014,2015,2016,2017))+labs(x="Year",y="Liberty Index",title = "Liberty Index of Continents (2010-2017)")+theme(panel.grid.minor= element_blank(),panel.grid.major.x = element_blank(),panel.background = element_rect(fill="grey90"),plot.title = element_text(face="bold",hjust = 0.5,size=15),panel.border = element_rect(colour = "black", fill=NA, size=1.5),axis.text = element_text(face="bold",size = 8),axis.title = element_text(face="bold",size = 12))+theme(legend.position = c(.45,.8),legend.title = element_blank(),legend.direction = "horizontal",legend.key.height = unit(.75,"line"),legend.key.width = unit(3,"line"))+scale_color_brewer(palette = "Dark2")
-  
-
-
 ```
 
 
 
 ```{r}
 viz_rad <- select(viz_table,2:8)
-
 viz_rad <- summarise_each(group_by(viz_rad,region,year),funs(median),personal_safety_index:liberty_index)
-
 colnames(viz_rad)[3:7]<- c("Personal Safety","Personal Rights","Inclusiveness","Personal Freedom","Liberty Index")
-
 ```
 
 ```{r}
-
 viz_rad_2010 <- filter(viz_rad, year==2010)
 viz_rad_2010<-viz_rad_2010[-c(2,7)]
-
 viz_rad_2010 <- gather(viz_rad_2010,"index","value",2:5)
 viz_rad_2010 <- spread(viz_rad_2010,region,value)
-
 c <- grDevices::col2rgb(c("orange","purple4", "hotpink","red","black","green"))
-
-
 chartJSRadar(scores = viz_rad_2010,maxScale = 1,fontsize=18,width = 350, height=220,scaleStepWidth = .1,labelSize = 15,addDots = T,polyAlpha = .08,lineAlpha = 50,colMatrix =c,main = "2010")
-
-
 ```
 
 ```{r}
 
 viz_rad_2016 <- filter(viz_rad, year==2016)
 viz_rad_2016<-viz_rad_2016[-c(2,7)]
-
 viz_rad_2016 <- gather(viz_rad_2016,"index","value",2:5)
 viz_rad_2016 <- spread(viz_rad_2016,region,value)
-
 chartJSRadar(scores = viz_rad_2016,maxScale = 1,fontsize=18,width = 350, height=220,scaleStepWidth = .1,labelSize = 15,addDots = T,polyAlpha = .08,lineAlpha = 50,colMatrix =c,main = "2016")
 ```
-
-
 
 ```{r}
 viz_rad_2017 <- filter(viz_rad, year==2017)
 viz_rad_2017<-viz_rad_2017[-c(2,7)]
-
 viz_rad_2017 <- gather(viz_rad_2017,"index","value",2:5)
 viz_rad_2017 <- spread(viz_rad_2017,region,value)
-
-
-
-
 chartJSRadar(scores = viz_rad_2017,maxScale = 1,fontsize=18,width = 350, height=220,scaleStepWidth = .1,labelSize = 15,addDots = T,polyAlpha = .08,lineAlpha = 50,colMatrix =c,main = "2017")
-
-
 ```
-
-
-
 
 ```{r}
 table_for_plots<- final_table_project
-
 table_for_plots <- filter(table_for_plots, region !=0 | income_group != "NA")
-
 ```
 
 ```{r}
@@ -866,17 +669,11 @@ p3
 happiness_plot <- select(final_table_project,region, income_group, happiness_index,liberty_index)
 happiness_plot <- filter(happiness_plot,happiness_index != 0)
 
-
 p4<- ggplot(data=happiness_plot, mapping= aes(x=happiness_index, y=liberty_index,color=region, shape=income_group)) + geom_point(size=2.5,alpha =.8)+ scale_x_continuous(breaks= seq(0,1,0.1)) + scale_y_continuous(breaks= seq(0.2,1,0.1), limits=c(0.2,0.9))
 p5<- p4+ geom_vline(xintercept = c(0.3,0.6)) + geom_hline(yintercept = c(0.4,0.7))+labs(x="Happiness Index",y="Liberty Index",title = "Liberty Index vs Happiness Index (2010-2017)")+theme( panel.background = element_rect(fill="grey90"),plot.title = element_text(face="bold",hjust = 0.5,size=15),panel.border = element_rect(colour = "black", fill=NA, size=1.5),axis.text = element_text(face="bold",size = 8),axis.title = element_text(face="bold",size = 12))+labs(color="Region", shape="Income Group")
 p5  
 ```
 
-
-
-```{r}
-
-```
 
 
 
